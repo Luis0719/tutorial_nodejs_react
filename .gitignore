@@ -1,6 +1,2 @@
-<<<<<<< HEAD
 node_modules
-keys.js
-=======
-node_modules
->>>>>>> init
+keysDev.js
