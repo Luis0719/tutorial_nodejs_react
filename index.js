@@ -22,7 +22,7 @@ app.use(passport.session());
 
 
 //Get routes and call the routes function
-require('./routes/routes')(app);
+require('./routes/mainRoutes')(app);
 
 
 //Get port from enviroment variables or default 5000 port
