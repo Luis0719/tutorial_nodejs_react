@@ -14,6 +14,7 @@ passport.deserializeUser((id, done) => {
         .then((user) => done(null, user));
 });
 
+
 // https://console.developers.google.com/ to get credentials
 passport.use(
     new googleStrategy({
@@ -22,23 +23,22 @@ passport.use(
         callbackURL: keys.googleRedirectURI,
         proxy: true
     }, 
-    (accessToken, refreshToken, profile, done) => {      
-        User.findOne({ googleID: profile.id }).then((existingUser) => {
-            if(existingUser) {
-                console.log("User already exists");
-                done(null, existingUser); //Tell passport that we've finished with the auth process
-            }else{
-                //User doesn't exists
-                console.log("Creating new user: " + profile.displayName);
-                
-                new User({
-                    userID: profile.id,
-                    name: profile.displayName,
-                    email: profile.emails[0].value
-                })
-                .save()
-                .then((user) => done(null, user));
-            }
-        });
+    async (accessToken, refreshToken, profile, done) => {                      
+        const existingUser = await User.findOne({ userID: profile.id })            
+            
+        if(existingUser) {
+            console.log("User already exists");
+            return done(null, existingUser); //Tell passport that we've finished with the auth process
+        }
+
+        //User doesn't exists
+        console.log("Creating new user: " + profile.displayName);
+        const user = await new User({
+            userID: profile.id,
+            name: profile.displayName,
+            email: profile.emails[0].value
+        }).save()
+        
+        done(null, user);
     })
 );

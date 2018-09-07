@@ -4,7 +4,12 @@ module.exports = (app) => {
     app.get(
         '/',
         (req, res) => {
-            res.send(req.user)
+            if( req.user ){
+                res.send(req.user);
+            }else{
+                res.send({user: 'null'});
+            }
+            
         }
     )
 
